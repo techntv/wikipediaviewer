@@ -35,28 +35,30 @@ function clickSearch(){
 
 		document.getElementById("value-search").focus();
    	document.getElementById("value-search").addEventListener('keydown',stopSubmit, false);
-		document.getElementById("value-search").addEventListener('keyup',makeRequest, false);
+		document.getElementById("value-search").addEventListener('keyup',startSearch, false);
 }
 
-function myFunction(arr){
-	var pageid = [];
-	var out = '';
-	var obj = arr.query.pages;
-	var i;
+function getData(arr){
+		if (typeof arr.query !== 'undefined') {
+						var pageid = [];
+						var out = '';
+						var obj = arr.query.pages;
+						for(var prop in obj){
+							pageid.push(obj[prop]);
+							}
+								pageid.forEach(function(value){
+									out += "<li class='result'>";
+									out += "<a  target='_blank' href='http://en.wikipedia.org/wiki/index.html?curid=" + value.pageid + "'>";
+									out += "<p class='title-result'>" + value.title + "</p>";
+									out += "<p class='extract-result'>" + value.extract + "</p>";
+									out += "</a>";
+									out += "</li>";
+									});
+									wikiViewer.innerHTML = out;
+			} else {
+						wikiViewer.innerHTML = "<li class='result'><a>Sorry, we don't have any result. Please try again.</a></li>";
+			}
 
-	for(var prop in obj){
-		pageid.push(obj[prop]);
-	}
-
-	pageid.forEach(function(value){
-		out += "<li class='result'>";
-		out += "<a  href='http://en.wikipedia.org/wiki/index.html?curid=" + value.pageid + "'>";
-		out += "<p class='title-result'>" + value.title + "</p>";
-		out += "<p class='extract-result'>" + value.extract + "</p>";
-		out += "</a>";
-		out += "</li>";
-	});
-		wikiViewer.innerHTML = out;
 }
 
 function stopSubmit(event){
@@ -64,21 +66,21 @@ function stopSubmit(event){
 		event.preventDefault();
 		return false;
 	}
-
 }
 
-function makeRequest(evt){
+function startSearch(evt){
 	if(evt.keyCode == 13){
 		document.getElementById("search-des").innerHTML = "";
 		document.getElementById("frame").style.marginTop = "1em";
 		var valueSearch = document.getElementById("value-search").value;
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&prop=extracts&exsentences=1&exintro&explaintext&exlimit=max&origin=*";
+		var url = "https://en.wikipedia.org/w/api.php?action=query&format=json&";
+		url += "generator=search&prop=extracts&exsentences=1&exintro&explaintext&exlimit=max&origin=*";
 			xmlhttp.onreadystatechange = function(){
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-						var myArr = JSON.parse(xmlhttp.responseText);
-						myFunction(myArr);
+						var myData = JSON.parse(xmlhttp.responseText);
+						getData(myData);
 				}
 			};
 
