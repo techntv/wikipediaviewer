@@ -28,7 +28,13 @@ a{
 	width: 90%;
 	margin: 0 auto;
 }
+h1{
+	text-align: center;
+	color: #fff;
+	margin-bottom: 50px;
+	font-size: 4em;
 
+}
 #frame{
 	margin-top: 12em;
 }
